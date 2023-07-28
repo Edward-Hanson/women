@@ -1,0 +1,48 @@
+<!-- job_post.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="job-post-container">
+  <h1>Create a New Job Post</h1>
+  <form method="POST" action="{% url 'create_job' %}" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    <table>
+      <tr>
+        <th><label for="id_title">Title:</label></th>
+        <td>
+          <input type="text" name="title" maxlength="50" required id="id_title">
+        </td>
+      </tr>
+      <tr>
+        <th><label for="id_description">Description:</label></th>
+        <td>
+          <textarea name="description" cols="40" rows="10" required id="id_description"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <th><label for="id_logo">Logo:</label></th>
+        <td>
+          <input type="file" name="logo" accept="image/*" id="id_logo">
+        </td>
+      </tr>
+      <tr>
+        <th><label for="id_certificate">Certificate:</label></th>
+        <td>
+          <input type="file" name="certificate" required id="id_certificate">
+        </td>
+      </tr>
+    </table>
+    <input type="submit" value="Create Job Post">
+  </form>
+  {% if form.errors %}
+          <div class="alert alert-danger mt-3">
+            {% for field in form %}
+            {% for error in field.errors %}
+            <p>{{ field.label }}: {{ error }}</p>
+            {% endfor %}
+            {% endfor %}
+          </div>
+          {% endif %}
+</div>
+{% endblock %}

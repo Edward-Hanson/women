@@ -1,0 +1,49 @@
+<!-- list_job.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .job-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 250px; /* Set a fixed height for each job item */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: blue; /* Set the text color to white */
+  }
+
+  /* Style the links within the job items to be easily visible */
+  .job-item a {
+    color: white;
+    text-decoration: underline;
+  }
+
+  /* To create equal grid sizes on small and medium screens */
+  @media (max-width: 992px) {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .col-md-4 {
+      flex-basis: calc(33.3333% - 20px);
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    {% for job in jobs %}
+      <div class="col-md-4">
+        <div class="job-item">
+          <h2 class="job-title">{{ job.title }}</h2>
+          <p class="job-description">{{ job.description }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
