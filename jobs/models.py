@@ -8,11 +8,11 @@ class Job(models.Model):
     author= models.ForeignKey(get_user_model(),on_delete = models.CASCADE)
     title = models.CharField(max_length=50)
     description = models.TextField()
-    logo = models.ImageField(upload_to ='media', blank=True, null=True)
     certificate = models.FileField(upload_to='media', validators= [FileExtensionValidator(allowed_extensions=['pdf'])])
     confirm_job= models.BooleanField(default= False)
     date = models.DateTimeField(default= timezone.now)
-    telephone = models.PositiveIntegerField(max_length=17)
+    telephone = models.PositiveIntegerField()
+    company = models.CharField(max_length=25)
     
     def job_confirm(self):
         self.confirm_job = True

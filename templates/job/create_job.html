@@ -1,48 +1,106 @@
-<!-- job_post.html -->
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+  .job-post-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .job-post-container h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  }
+
+  .form-group label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .form-control textarea {
+    resize: vertical;
+  }
+
+  .form-control-file {
+    padding-top: 8px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+  }
+</style>
+
 <div class="job-post-container">
   <h1>Create a New Job Post</h1>
   <form method="POST" action="{% url 'create_job' %}" enctype="multipart/form-data">
 
     {% csrf_token %}
-    <table>
-      <tr>
-        <th><label for="id_title">Title:</label></th>
-        <td>
-          <input type="text" name="title" maxlength="50" required id="id_title">
-        </td>
-      </tr>
-      <tr>
-        <th><label for="id_description">Description:</label></th>
-        <td>
-          <textarea name="description" cols="40" rows="10" required id="id_description"></textarea>
-        </td>
-      </tr>
-      <tr>
-        <th><label for="id_logo">Logo:</label></th>
-        <td>
-          <input type="file" name="logo" accept="image/*" id="id_logo">
-        </td>
-      </tr>
-      <tr>
-        <th><label for="id_certificate">Certificate:</label></th>
-        <td>
-          <input type="file" name="certificate" required id="id_certificate">
-        </td>
-      </tr>
-    </table>
-    <input type="submit" value="Create Job Post">
+    <div class="form-group">
+      <label for="id_title">Title:</label>
+      <input type="text" name="title" maxlength="50" required class="form-control" id="id_title">
+    </div>
+    <div class="form-group">
+      <label for="id_description">Description:</label>
+      <textarea name="description" cols="40" rows="6" required class="form-control" id="id_description"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="id_company">Company:</label>
+      <input type="text" name="company" maxlength="25" required class="form-control" id="id_company">
+    </div>
+    <div class="form-group">
+      <label for="id_telephone">Telephone:</label>
+      <textarea name="telephone" cols="40" rows="2" required class="form-control" id="id_telephone"></textarea>
+    </div>
+    <div class="form-group" style="margin-bottom: 30px;">
+      <label for="id_certificate">Certificate:</label>
+      <input type="file" name="certificate" required class="form-control-file" id="id_certificate">
+    </div>
+    <input type="submit" value="Create Job Post" class="btn btn-primary">
   </form>
   {% if form.errors %}
-          <div class="alert alert-danger mt-3">
-            {% for field in form %}
-            {% for error in field.errors %}
-            <p>{{ field.label }}: {{ error }}</p>
-            {% endfor %}
-            {% endfor %}
-          </div>
-          {% endif %}
+  <div class="alert alert-danger mt-3">
+    {% for field in form %}
+    {% for error in field.errors %}
+    <p>{{ field.label }}: {{ error }}</p>
+    {% endfor %}
+    {% endfor %}
+  </div>
+  {% endif %}
 </div>
 {% endblock %}

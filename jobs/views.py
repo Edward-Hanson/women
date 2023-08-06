@@ -15,7 +15,7 @@ def create_job(request):
                 post.confirm_job = True
             post.save()
             messages.info(request,"Upload Success! \n You job post will undergo Scrutiny",)
-            return redirect('home')
+            return redirect('list_job')
     else:
         form= JobForm()
     return render(request,'job/create_job.html',{'form':form})
@@ -32,3 +32,11 @@ def delete_job(request,pk):
 def confirmed_list(request):
     confirmed_list = Job.objects.filter(confirm_job=True).order_by('-date')
     return render(request,'job/list_job.html',{'confirmed_list':confirmed_list})
+
+def pending_list(request):
+    pending_list = Job.objects.filter(confirm_job= False).order_by('-date')
+    return render(request,'job/pending_list.html',{'pending_list': pending_list})
+
+def detailed_job(request,pk):
+    job = get_object_or_404(Job,pk=pk)
+    return render(request,'job/detailed_job.html',{'job':job})

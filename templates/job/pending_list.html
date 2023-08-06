@@ -5,10 +5,14 @@
   .job-item {
     border: 1px solid #e6e6e6;
     padding: 20px;
+    margin-right: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
     color: #444; /* Set the text color to a dark gray */
     background-color: #f9f9f9; /* Set a light background color */
-    width: 100%; /* Set the job item width to fill the container */
+    width: 300px; /* Set a fixed width for each job item */
     border-radius: 8px;
   }
 
@@ -40,38 +44,18 @@
     font-weight: 500; /* Use a medium font weight */
     color: #666; /* Set the text color to a darker gray */
   }
-
-  /* Add some margin to separate the job grid from the content above */
-  .job-grid-container {
-    margin-top: -10px; /* Adjust the margin-top to move the row closer to the header */
-  }
-
-  /* Clear floats inside the job grid container */
-  .job-grid-container::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-  /* Add margin to the container that wraps the job grid */
-  .job-grid-content {
-    margin-top: 40px;
-  }
 </style>
 
-<div class="container job-grid-content">
-  <!-- Add the job grid container here -->
-  <div class="row job-grid-container">
-    {% for job in jobs %}
-      <div class="col-md-3 mb-4"> <!-- Use "mb-4" to add margin between job items -->
-        <div class="job-item">
-          <h2 class="job-title">{{ job.title }}</h2>
-          
-          <p class="job-company">Company Name: {{ job.company }}</p>
-          <p>
-            <a href="{% url 'detailed_job' job.pk %}" target="_blank">Learn More</a>
-          </p>
-        </div>
+<div class="container">
+  <div class="row">
+    {% for job in pending_list %}
+      <div class="job-item">
+        <h2 class="job-title">{{ job.title }}</h2>
+        <p class="job-description">{{ job.description }}</p>
+        <p class="job-company">Company Name: {{ job.company }}</p>
+        <p>
+        <a href="{% url 'detailed_job' job.pk %}" target="_blank">Learn More</a>
+        </p>
       </div>
     {% endfor %}
   </div>

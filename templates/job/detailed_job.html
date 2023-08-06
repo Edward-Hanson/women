@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .job-detail-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .job-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .job-description {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #666;
+  }
+
+  .job-company,
+  .job-date,
+  .job-contact {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #888;
+  }
+
+  .job-contact strong {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .job-contact a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  .delete-btn,
+  .confirm-btn,
+  .download-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+  }
+
+  .delete-btn:hover,
+  .confirm-btn:hover,
+  .download-btn:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+<div class="job-detail-container">
+  <h1 class="job-title">{{ job.title }}</h1>
+  <p class="job-description">{{ job.description }}</p>
+  <p class="job-company">Company Name: {{ job.company }}</p>
+  <p class="job-date">Date Posted: {{ job.date }}</p>
+  <p class="job-contact">Contact Info: <a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>, {{ job.telephone }}</p>
+
+  {% if request.user.is_superuser%}
+  <a href="{% url 'delete_job' job.pk %}" class="delete-btn">Delete</a>
+    {% if job.confirm_job == False %}
+      <a href={{ job.job_confirm }} class="confirm-btn">Confirm Job</a>
+    {% endif%}
+    {% if job.certificate %}
+      <a href="{{ job.certificate.url }}" download class="download-btn">Download Certificate</a>
+    {% endif %}
+    
+  {% endif %}
+</div>
+{% endblock %}
