@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  .job-item {
+    border: 1px solid #e6e6e6;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #444;
+    background-color: #f9f9f9;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .job-item a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .job-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .job-description {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  .job-company {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+  }
+
+  .job-grid-container {
+    margin-top: -10px;
+  }
+
+  .job-grid-container::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .job-grid-content {
+    margin-top: 40px;
+  }
+
+</style>
+
+<div class="container job-grid-content">  
+  <!-- Add the job grid container here -->
+  <div class="row job-grid-container">
+    {% for job in jobs %}
+      <div class="col-md-3 mb-4">
+        <div class="job-item">
+          <h2 class="job-title">{{ job.title }}</h2>
+          
+          <p class="job-company">Company: {{ job.company }}</p>
+          <p>
+            <a href="{% url 'detailed_job' job.pk %}" target="_blank">Learn More</a>
+          </p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

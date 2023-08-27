@@ -32,7 +32,8 @@
         }
         main {
             flex-grow: 1;
-            margin-top: 120px;
+            margin-top: 80px;
+            margin-bottom: 8px;
         }
         footer {
             background-color: #333;
@@ -74,7 +75,13 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
+                {% if 'job/detail' in request.path or 'job/search_results' in request.path or 'job/create_jobs' in request.path or 'job/pending' in request.path %}
+                <a class="navbar-brand" href="{% url 'list_job' %}">Job Site</a>
+                {% elif 'prof/detail' in request.path or 'prof/create_prof' in request.path %}
+                <a class="navbar-brand" href="{% url 'list_profs' %}">Professional Cards</a>
+                {% else %}
                 <a class="navbar-brand" href="{% url 'home' %}">Women Empowering Site</a>
+                {% endif %}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -93,6 +100,11 @@
                                 <li class="nav-item">
                                     <a href="{% url 'pending_list' %}" class="btn btn-success job-btn list-pending-job-btn">List Pending Job</a>
                                 </li>
+                            {% endif %}
+                            {% if user.is_superuser and 'prof' in request.path and 'create_prof' not in request.path %}
+                            <li class="nav-item">
+                                <a href="{% url 'create_prof' %}" class="btn btn-primary job-btn create-job-btn"> + Professional </a>
+                            </li>
                             {% endif %}
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

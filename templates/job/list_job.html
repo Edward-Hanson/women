@@ -6,68 +6,105 @@
     border: 1px solid #e6e6e6;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    color: #444; /* Set the text color to a dark gray */
-    background-color: #f9f9f9; /* Set a light background color */
-    width: 100%; /* Set the job item width to fill the container */
+    color: #444;
+    background-color: #f9f9f9;
+    width: 100%;
     border-radius: 8px;
   }
 
-  /* Style the links within the job items to be easily visible */
   .job-item a {
-    color: #007bff; /* Set link color to a blue shade */
+    color: #007bff;
     text-decoration: none;
     font-weight: bold;
   }
 
-  /* Make the title bolder and bigger */
   .job-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
   }
 
-  /* Style the description text */
   .job-description {
     font-size: 16px;
-    font-weight: 400; /* Use a regular font weight */
-    line-height: 1.5; /* Increase line height for better readability */
+    font-weight: 400;
+    line-height: 1.5;
     margin-bottom: 15px;
   }
 
-  /* Style the company name */
   .job-company {
     font-size: 14px;
-    font-weight: 500; /* Use a medium font weight */
-    color: #666; /* Set the text color to a darker gray */
+    font-weight: 500;
+    color: #666;
   }
 
-  /* Add some margin to separate the job grid from the content above */
   .job-grid-container {
-    margin-top: -10px; /* Adjust the margin-top to move the row closer to the header */
+    margin-top: -10px;
   }
 
-  /* Clear floats inside the job grid container */
   .job-grid-container::after {
     content: "";
     display: table;
     clear: both;
   }
 
-  /* Add margin to the container that wraps the job grid */
   .job-grid-content {
     margin-top: 40px;
+  }
+
+  /* Style the search bar container */
+  .search-bar-container {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    margin-top: 10px; /* Move the search bar upwards */
+    margin-bottom: 40px; /* Add some margin below the search bar */
+  }
+
+  /* Style the search bar */
+  .search-bar {
+    display: flex;
+    align-items: center;
+  }
+
+  .search-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+
+  .search-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .search-btn:hover {
+    background-color: #0056b3;
   }
 </style>
 
 <div class="container job-grid-content">
+  <!-- Add the search bar container -->
+  <div class="search-bar-container">
+    <form  class="search-bar" action="{% url 'search_list' %}" method= "get">
+      <input type="text" name="search" class="search-input" placeholder="Search...">
+      <button type="submit" class="search-btn">Search</button>
+    </form>
+  </div>
+  
   <!-- Add the job grid container here -->
   <div class="row job-grid-container">
     {% for job in jobs %}
-      <div class="col-md-3 mb-4"> <!-- Use "mb-4" to add margin between job items -->
+      <div class="col-md-3 mb-4">
         <div class="job-item">
           <h2 class="job-title">{{ job.title }}</h2>
           
-          <p class="job-company">Company Name: {{ job.company }}</p>
+          <p class="job-company">Company: {{ job.company }}</p>
           <p>
             <a href="{% url 'detailed_job' job.pk %}" target="_blank">Learn More</a>
           </p>

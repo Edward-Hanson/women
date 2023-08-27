@@ -3,32 +3,35 @@
 {% block content %}
 <style>
   .job-detail-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 30px;
-    background-color: #f9f9f9;
+    max-width: 700px;
+    margin: 80px auto 40px;
+    padding: 40px;
+    background-color: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center align content */
   }
 
   .job-title {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: bold;
     margin-bottom: 20px;
     color: #333;
   }
 
   .job-description {
-    font-size: 16px;
-    margin-bottom: 20px;
-    color: #666;
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #555;
   }
 
   .job-company,
   .job-date,
-  .job-contact {
-    font-size: 14px;
-    margin-bottom: 10px;
+  .job-contact,
+  .job-telephone {
+    font-size: 16px;
+    margin-bottom: 15px;
     color: #888;
   }
 
@@ -42,25 +45,25 @@
     text-decoration: none;
   }
 
-  .delete-btn,
-  .confirm-btn,
-  .download-btn {
+  .action-btns {
+    margin-top: 30px;
+  }
+
+  .action-btn {
     background-color: #007bff;
-    color: #fff;
+    color: #ffffff;
     border: none;
     border-radius: 4px;
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 16px;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 15px;
     transition: background-color 0.3s;
   }
 
-  .delete-btn:hover,
-  .confirm-btn:hover,
-  .download-btn:hover {
+  .action-btn:hover {
     background-color: #0056b3;
   }
 </style>
@@ -70,17 +73,17 @@
   <p class="job-description">{{ job.description }}</p>
   <p class="job-company">Company Name: {{ job.company }}</p>
   <p class="job-date">Date Posted: {{ job.date }}</p>
-  <p class="job-contact">Contact Info: <a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>, {{ job.telephone }}</p>
+  <p class="job-contact">Contact Info: <a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a></p>
+  <p class="job-telephone">Telephone: {{ job.telephone }}</p>
 
-  {% if request.user.is_superuser%}
-  <a href="{% url 'delete_job' job.pk %}" class="delete-btn">Delete</a>
-    {% if job.confirm_job == False %}
-      <a href={{ job.job_confirm }} class="confirm-btn">Confirm Job</a>
-    {% endif%}
-    {% if job.certificate %}
-      <a href="{{ job.certificate.url }}" download class="download-btn">Download Certificate</a>
+  {% if request.user.is_superuser %}
+  <div class="action-btns">
+    <a href="{% url 'delete_job' job.pk %}" class="action-btn">Delete</a>
+    {% if not job.confirm_job %}
+      <a href="{% url 'confirm_job' job.pk %}" class="action-btn">Confirm Job</a>
     {% endif %}
-    
+    <a href="{% url 'download' job.pk %}" class="action-btn" download>Download Certificate</a>
+  </div>
   {% endif %}
 </div>
 {% endblock %}

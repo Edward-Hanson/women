@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
+from django.db.models import Q
 
 from .forms import JobForm
 from .models import Job
@@ -40,3 +41,19 @@ def pending_list(request):
 def detailed_job(request,pk):
     job = get_object_or_404(Job,pk=pk)
     return render(request,'job/detailed_job.html',{'job':job})
+
+def download(request,pk):
+    file = get_object_or_404(Job,pk=pk)
+    return redirect(file.certificate.url)
+
+def confirm_job(request,pk):
+    job= get_object_or_404(Job,pk=pk)
+    job.job_confirm()
+    return redirect('detailed_job',pk=pk)
+
+def search_list(request):
+    word = request.GET.get('search')
+    if not word:
+        return redirect('list_job')
+    jobs= Job.objects.filter(Q(title__icontains=word)| Q(description__icontains=word))
+    return render(request,'job/search_list.html',{'jobs':jobs})
