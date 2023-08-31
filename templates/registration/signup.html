@@ -1,126 +1,179 @@
-{% extends "base.html" %}
-{% block content %}
-<style>
-  .body {
-    display: grid;
-    grid-template-columns: repeat(3, 400px);
-    gap: 20px;
-    padding: 20px;
-    max-width: 90%;
-    margin: 0 auto;
-  }
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
-  .card {
-    position: relative;
-    background: #f0f0f0;
-    border-radius: 6px;
-    overflow: hidden;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    cursor: pointer;
-    height: 400px;
-    width: 400px;
-  }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image: url("{% static 'images/woman1.jpg' %}");
+      background-size: cover;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
 
-  .card:hover {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    transform: translateY(-2px);
-  }
+    .app-name {
+      font-size: 32px;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #0000FF;
+      margin-bottom: 20px;
+    }
 
-  .profile-pic {
-    position: relative;
-    width: 100%;
-    padding-top: 100%;
-    background-color: #ffffff;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    overflow: hidden;
-  }
+    form {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background-color: transparent;
+    }
 
-  .profile-pic img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-  }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+    }
 
-  .details {
-    padding: 10px;
-    text-align: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    border-radius: 6px;
-    opacity: 0;
-    transform: translateY(100%);
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: white;
+      font-size: 18px;
+    }
 
-  .card:hover .details {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 20px;
+      box-sizing: border-box;
+      font-size: 16px;
+      margin-bottom: 16px;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
 
-  .name {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #fff;
-    margin: 4px 0;
-  }
+    .input-group {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-  .title {
-    font-size: 1.1rem;
-    color: #ff4d94;
-  }
+    .input-group label {
+      margin-right: 8px;
+      flex-basis: 40%;
+    }
 
-  .occupation {
-    font-size: 1.1rem;
-    color: #e0e0e0;
-    margin-bottom: 6px;
-  }
+    .input-group input,
+    .input-group select {
+      flex-grow: 1;
+    }
 
-  .institution,
-  .telephone {
-    font-size: 1.0rem;
-    color: #ccc;
-    margin-bottom: 2px;
-  }
+    .button-group {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
 
-  .icon {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 3px;
-  }
-</style>
-<div class="body">
-  {% for prof in profs %}
-  <div class="card">
-    <div class="profile-pic">
-      <img src="{{prof.profile_pic.url}}" alt="Profile Picture" />
-    </div>
-    <div class="details">
-      <div class="name">{{prof.name}}</div>
-      <div class="title">{{prof.title}}</div>
-      <div class="occupation">{{prof.occupation}}</div>
-      <div class="institution">
-        {{prof.institution}}
-      </div>
-      <div class="telephone">
-        {{prof.telephone}}
-      </div>
-    </div>
+    input[type="submit"],
+    input[type="button"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover,
+    input[type="button"]:hover {
+      background-color: #45a049;
+    }
+
+    .login-link {
+      text-decoration: none;
+      color: blue;
+      font-weight: bold;
+    }
+
+    .login-text {
+      font-weight: bold;
+      color: white;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-name">
+    <span style="color: #0000FF">Womens</span><span style="color: #fff">World</span>
   </div>
-  {% endfor %}
-</div>
-{% endblock %}
+  <form method="POST" action="{% url 'signup' %}">
+    {% csrf_token %}
+    <h1>Sign Up</h1>
+    <div class="input-group">
+      <label for="id_username">Username:</label>
+      <input type="text" id="id_username" name="username" required>
+    </div>
+
+    <div class="input-group">
+      <label for="id_email">Email:</label>
+      <input type="email" id="id_email" name="email" required>
+    </div>
+
+    <div class="input-group">
+      <label for="id_age">Age:</label>
+      <input type="number" id="id_age" name="age" min="0" required>
+    </div>
+
+    <div class="input-group">
+      <label for="id_gender">Gender:</label>
+      <select id="id_gender" name="gender" required>
+        <option value="">Select gender</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="id_password1">Password:</label>
+      <input type="password" id="id_password1" autocomplete="new-password" name="password1" required>
+    </div>
+
+    <div class="input-group">
+      <label for="id_password2">Repeat Password:</label>
+      <input type="password" id="id_password2" autocomplete="new-password" name="password2" required>
+    </div>
+
+    <div class="button-group">
+      <input type="submit" value="Sign Up">
+    </div>
+  </form>
+
+  <div class="login-text">
+    Already have an account? <a class="login-link" href="{% url 'login' %}">Log In</a>
+  </div>
+</body>
+
+</html>
