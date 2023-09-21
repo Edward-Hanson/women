@@ -8,6 +8,7 @@ class Profs(models.Model):
     institution= models.CharField(max_length=50)
     profile_pic = models.ImageField(upload_to= 'media')
     telephone= models.PositiveIntegerField()
+    email = models.EmailField(blank=True, null=True)
     details = models.TextField(blank=True,null=True)
     
     def __str__(self):

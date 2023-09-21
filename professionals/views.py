@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 
 from .forms import ProfForm
@@ -31,4 +32,11 @@ def list_profs(request):
 def detail_prof(request,pk):
     prof = get_object_or_404(Profs,pk=pk)
     return render(request,'prof/detail_prof.html',{'prof':prof})
+
+def search_prof(request):
+    word = request.GET.get('search')
+    if not word:
+        return redirect('list_profs')
+    profs= Profs.objects.filter(Q(occupation__icontains=word)| Q(name__icontains=word))
+    return render(request,'prof/search_list.html',{'profs':profs})
         
