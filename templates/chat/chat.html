@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        /* CSS styles for the chat interface */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .chat-container {
+            max-width: 400px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-history {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .user-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .user-message {
+            background-color: #007bff;
+            color: #fff;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-history" id="chat-history">
+            <!-- Display the chat history here -->
+        </div>
+        <div class="user-input">
+            <form id="chat-form">
+                {% csrf_token %}
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to handle real-time chat updates
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatForm = document.getElementById('chat-form');
+            const chatHistory = document.getElementById('chat-history');
+            const userInput = document.getElementById('user-input');
+
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const userMessage = userInput.value.trim();
+                if (userMessage !== '') {
+                    // Send the user message to the server via AJAX or WebSocket
+                    // Update the chat history with user's message
+                    chatHistory.innerHTML += `<div class="message user-message">${userMessage}</div>`;
+                    userInput.value = '';
+
+                    // Request a response from the bot and update the chat history
+                    // You can use JavaScript to make an AJAX request to your Django view
+                    // and update the chat history with the bot's response in real-time.
+                    // This part depends on your specific implementation.
+                }
+            });
+        });
+    </script>
+</body>
+</html>

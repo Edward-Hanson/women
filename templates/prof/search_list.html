@@ -121,52 +121,8 @@
     display: inline-block;
     vertical-align: middle;
     margin-right: 3px;
-  }
-  .search-bar-container {
-    display: flex;
-    justify-content: flex-end; /* Align items to the right */
-    margin-top: 10px; /* Move the search bar upwards */
-    margin-bottom: 40px; /* Add some margin below the search bar */
-  }
-
-  /* Style the search bar */
-  .search-bar {
-    display: flex;
-    align-items: center;
-  }
-
-  .search-input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-  }
-
-  .search-btn {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-
-  .search-btn:hover {
-    background-color: #0056b3;
-  }
-
+ 
 </style>
-
-<div class="container job-grid-content">
-  <!-- Add the search bar container -->
-  <div class="search-bar-container">
-    <form  class="search-bar" action="{% url 'search_prof' %}" method= "get">
-      <input type="text" name="search" class="search-input" placeholder="Search...">
-      <button type="submit" class="search-btn">Search</button>
-    </form>
-  </div>
 
 <div class="body">
   {% for prof in profs %}

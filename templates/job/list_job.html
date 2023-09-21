@@ -51,15 +51,13 @@
     margin-top: 40px;
   }
 
-  /* Style the search bar container */
   .search-bar-container {
     display: flex;
-    justify-content: flex-end; /* Align items to the right */
-    margin-top: 10px; /* Move the search bar upwards */
-    margin-bottom: 40px; /* Add some margin below the search bar */
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: 40px;
   }
 
-  /* Style the search bar */
   .search-bar {
     display: flex;
     align-items: center;
@@ -86,24 +84,54 @@
   .search-btn:hover {
     background-color: #0056b3;
   }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .pagination-item {
+    margin-right: 5px;
+  }
+
+  .pagination-prev,
+  .pagination-next {
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+
+  .pagination-item.active {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+  }
 </style>
 
 <div class="container job-grid-content">
-  <!-- Add the search bar container -->
   <div class="search-bar-container">
-    <form  class="search-bar" action="{% url 'search_list' %}" method= "get">
+    <form class="search-bar" action="{% url 'search_list' %}" method="get">
       <input type="text" name="search" class="search-input" placeholder="Search...">
       <button type="submit" class="search-btn">Search</button>
     </form>
   </div>
-  
-  <!-- Add the job grid container here -->
+
   <div class="row job-grid-container">
-    {% for job in jobs %}
+    {% for job in page %}
       <div class="col-md-3 mb-4">
         <div class="job-item">
           <h2 class="job-title">{{ job.title }}</h2>
-          
           <p class="job-company">Company: {{ job.company }}</p>
           <p>
             <a href="{% url 'detailed_job' job.pk %}" target="_blank">Learn More</a>
@@ -113,4 +141,35 @@
     {% endfor %}
   </div>
 </div>
-{% endblock %}
+
+<div class="container" style="margin-bottom: 20px;">
+  <div class="pagination-container">
+    <ul class="pagination">
+      {% if page.has_previous %}
+        <li class="pagination-item">
+          <a href="?page=1" class="pagination-prev">&laquo; First</a>
+        </li>
+        <li class="pagination-item">
+          <a href="?page={{ page.previous_page_number }}" class="pagination-prev">Previous</a>
+        </li>
+      {% endif %}
+
+      {% for num in page.paginator.page_range %}
+        <li class="pagination-item {% if num == page.number %}active{% endif %}">
+          <a href="?page={{ num }}">{{ num }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page.has_next %}
+        <li class="pagination-item">
+          <a href="?page={{ page.next_page_number }}" class="pagination-next">Next</a>
+        </li>
+        <li class="pagination-item">
+          <a href="?page={{ page.paginator.num_pages }}" class="pagination-next">&raquo; Last</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+{% endblock content %}

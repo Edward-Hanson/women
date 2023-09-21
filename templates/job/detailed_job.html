@@ -73,7 +73,7 @@
   <p class="job-description">{{ job.description }}</p>
   <p class="job-company">Company Name: {{ job.company }}</p>
   <p class="job-date">Date Posted: {{ job.date }}</p>
-  <p class="job-contact">Contact Info: <a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a></p>
+  <p class="job-contact">Contact Info: <a href="mailto:{{ request.user.email }}">{{ job.author.email }}</a></p>
   <p class="job-telephone">Telephone: {{ job.telephone }}</p>
 
   {% if request.user.is_superuser %}

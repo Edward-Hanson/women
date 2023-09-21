@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+    }
+
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        margin-top: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-pic {
+        width: 230px;
+        height: 230px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-right: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-details {
+        flex: 1;
+        text-align:center;
+    }
+
+    .name {
+        font-size: 35px;
+        margin: 0;
+        font-weight:bold;
+    }
+
+    .occupation {
+        font-size: 24px;
+        margin: 5px 0;
+        font-style: oblique;
+        font-weight: bold;
+        color:blue;
+    }
+
+    .institution {
+        font-size: 20px;
+        color:black;
+        margin-top: 20px;
+    }
+
+    .telephone {
+        font-size: 22px;
+        color: #555;
+        margin-top: 20px;
+    }
+
+    .bio-heading {
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    .bio-details {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-top: 10px;
+    }
+
+    .action-btns {
+        margin-top: 30px;
+        position:absolute;
+        left:47vw;
+      }
+    
+      .action-btn {
+        background-color:red;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 12px 24px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-right: 15px;
+        transition: background-color 0.3s;
+      }
+    
+      .action-btn:hover {
+        background-color: white;
+      }
+
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <img class="profile-pic" src="{{ prof.profile_pic.url }}" alt="{{ name }} Profile Picture">
+        <div class="profile-details">
+            <h1 class="name">{{prof.title}} {{ prof.name }}</h1>
+            <h3 class="occupation">{{ prof.occupation }}</h3>
+            <h4 class="institution">{{ prof.institution }}</h4>
+            <p class="telephone">Telephone: {{ prof.telephone }}</p>
+            <p class = "mail"> Mail: {{prof.email }}</p>
+        </div>
+    </div>
+    <h2 class="bio-heading">Bio</h2>
+    <p class="bio-details">{{ prof.details }}</p>
+</div>
+{% if request.user.is_superuser %}
+  <div class="action-btns">
+    <a href="{% url 'del_prof' prof.pk %}" class="action-btn">Delete</a>
+  </div>
+  {% endif %}
+{% endblock %}
