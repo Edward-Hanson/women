@@ -14,22 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/',include('django.contrib.auth.urls')),
-    path('',include('accounts.urls')),
-    path('home/',TemplateView.as_view(template_name='home.html'),name='home'),
-    path('job/',include('jobs.urls')),
-    path('prof/',include('professionals.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('accounts.urls')),
+    path('home/', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('job/', include('jobs.urls')),
+    path('prof/', include('professionals.urls')),
+    path('bot/', include('chatbot.urls')),
+    path('blog/',include('blog.urls')),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# Serve static files and media files during development if DEBUG is True
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

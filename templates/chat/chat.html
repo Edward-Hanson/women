@@ -1,103 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Chatbot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
     <style>
-        /* CSS styles for the chat interface */
         body {
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         .chat-container {
-            max-width: 400px;
-            margin: 0 auto;
+            max-width:500px;
+            height:500px;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
 
-        .chat-history {
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: #f9f9f9;
-        }
-
-        .user-input {
-            display: flex;
-            margin-top: 10px;
-        }
-
-        #user-input {
-            flex-grow: 1;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-
-        button[type="submit"] {
+        .chat-header {
             background-color: #007bff;
             color: #fff;
-            border: none;
-            border-radius: 3px;
-            padding: 5px 10px;
-            margin-left: 5px;
-            cursor: pointer;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            padding: 20px;
+            overflow-y: scroll;
+            max-height: 300px;
         }
 
         .message {
-            margin: 5px 0;
-            padding: 5px 10px;
-            border-radius: 5px;
+            margin: 10px 0;
         }
 
         .user-message {
-            background-color: #007bff;
-            color: #fff;
             text-align: right;
         }
+
+        .assistant-message {
+            text-align: left;
+        }
+
+        .message-content {
+            padding: 10px;
+            border-radius: 5px;
+            word-wrap: break-word;
+        }
+
+        .user-content {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .assistant-content {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        /* Add this CSS to make the delete button red and center it */
+        form:last-child {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            margin-top: 10px;
+}
+
+form:last-child button {
+    background-color: #ff0000; /* Red color for delete button */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+
+    
+}
+
     </style>
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-history" id="chat-history">
-            <!-- Display the chat history here -->
+        <div class="chat-header">Chat with Assistant</div>
+        <div class="chat-messages">
+            {% for message in messages %}
+                <div class="message {% if message.role == 'user' %}user-message{% else %}assistant-message{% endif %}">
+                    <div class="message-content {% if message.role == 'user' %}user-content{% else %}assistant-content{% endif %}">
+                        {{ message.content }}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        <div class="user-input">
-            <form id="chat-form">
-                {% csrf_token %}
-                <input type="text" id="user-input" placeholder="Type your message...">
-                <button type="submit">Send</button>
-            </form>
-        </div>
+        <form method="POST" action="{% url 'chat' %}">
+            {% csrf_token %}
+            {{ chat_form.user_input }}
+            <button type="submit">Send</button>
+        </form>
+        <form method="POST" action="{% url 'clear-messages' %}">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
     </div>
-
+    
     <script>
-        // JavaScript to handle real-time chat updates
-        document.addEventListener('DOMContentLoaded', function() {
-            const chatForm = document.getElementById('chat-form');
-            const chatHistory = document.getElementById('chat-history');
-            const userInput = document.getElementById('user-input');
-
-            chatForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const userMessage = userInput.value.trim();
-                if (userMessage !== '') {
-                    // Send the user message to the server via AJAX or WebSocket
-                    // Update the chat history with user's message
-                    chatHistory.innerHTML += `<div class="message user-message">${userMessage}</div>`;
-                    userInput.value = '';
-
-                    // Request a response from the bot and update the chat history
-                    // You can use JavaScript to make an AJAX request to your Django view
-                    // and update the chat history with the bot's response in real-time.
-                    // This part depends on your specific implementation.
-                }
+        // JavaScript logic for handling user input and sending it to the server
+        document.addEventListener("DOMContentLoaded", function() {
+            const userInput = document.getElementById("user-input");
+            const sendButton = document.getElementById("send-button");
+            const chatMessages = document.querySelector(".chat-messages");
+    
+            sendButton.addEventListener("click", function() {
+                const userMessage = userInput.value;
+                userInput.value = ""; // Clear the input field
+    
+                // Create a new user message element and append it to the chat container
+                const userMessageElement = document.createElement("div");
+                userMessageElement.classList.add("message", "user-message");
+                const userMessageContent = document.createElement("div");
+                userMessageContent.classList.add("message-content", "user-content");
+                userMessageContent.textContent = userMessage;
+                userMessageElement.appendChild(userMessageContent);
+    
+                chatMessages.appendChild(userMessageElement);
+    
+                // Scroll the chat messages container to the bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+                // Send the user message to the server using AJAX or fetch
+                // You need to implement this part to interact with your Django view
+            });
+    
+            // Automatically scroll to the bottom of the chat messages container when typing
+            userInput.addEventListener("input", function() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             });
         });
     </script>
+    
+    
 </body>
 </html>

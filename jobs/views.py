@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 from .forms import JobForm
 from .models import Job
@@ -22,9 +23,19 @@ def create_job(request):
     return render(request,'job/create_job.html',{'form':form})
 
 def list_job(request):
-    jobs= Job.objects.filter(confirm_job=True).order_by('-date')
-    return render(request,'job/list_job.html',{'jobs':jobs})
+    # Get all confirmed jobs and order them by date
+    jobs = Job.objects.filter(confirm_job=True).order_by('-date')
 
+    # Create a Paginator object with 16 jobs per page
+    paginator = Paginator(jobs, 16)
+
+    # Get the page number from the request's GET parameters (default to 1)
+    page_number = request.GET.get('page', 1)
+
+    # Get the Page object for the requested page number
+    page = paginator.get_page(page_number)
+
+    return render(request, 'job/list_job.html', {'page': page})
 def delete_job(request,pk):
     post= get_object_or_404(Job,pk=pk)
     post.delete()
