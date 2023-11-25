@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 
-os.environ['API_KEY']= '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'
+os.environ['API_KEY']= 'your api_key_here'
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
