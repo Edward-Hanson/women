@@ -28,6 +28,7 @@ urlpatterns = [
     path('prof/', include('professionals.urls')),
     path('bot/', include('chatbot.urls')),
     path('blog/',include('blog.urls')),
+    path('article/',include('article.urls')),
 ]
 
 # Serve static files and media files during development if DEBUG is True

@@ -12,12 +12,30 @@ from django.contrib.auth.decorators import login_required
 from .forms import EmailForm,UploadForm
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
+
 
 # Create your views here.
 @login_required
-def listfiles(request):
+def listfiles(request,cat=None):
     files = FilesAdmin.objects.all()
-    return render(request,'blog/list.html',{'files':files})
+    paginator = Paginator(files, 16)
+    page_number = request.GET.get('page', 1)
+    page = paginator.get_page(page_number)
+    if cat:
+        files_by_cat =[]
+        for file in files:
+            if file.get_file_type()==cat:
+                files_by_cat.append(file)
+                paginator = Paginator(files_by_cat, 16)
+                page_number = request.GET.get('page', 1)
+                page = paginator.get_page(page_number)
+
+        return render(request,'blog/list.html',{'files':page})
+                
+   
+    return render(request,'blog/list.html',{'files':page})
 
 @login_required
 def detailfile(request,pk):
@@ -33,13 +51,11 @@ def download(request, file_id):
     
 @login_required   
 def query_set(request):
-    query = request.GET.get('q')
-    if query is None:
-        return
-    results = FilesAdmin.objects.filter(Q(title__icontains=query)  | Q(description__icontains= query))
-    context = {'files': results,
-               'query': query}
-    return render(request,'search_results.html', context)
+    word = request.GET.get('q')
+    print("word:" ,word)
+    results = FilesAdmin.objects.filter(Q(title__icontains=word)  | Q(description__icontains=word))
+    print(results)
+    return render(request,'blog/search_results.html', {'files':results})
 
 @staff_member_required
 @login_required
@@ -82,7 +98,10 @@ def send_email(request, pk):
     context = {'form': form}
     return render(request, 'blog/email_form.html', context)
 
+@staff_member_required
+@login_required
 def delete_post(request,pk):
     post= get_object_or_404(FilesAdmin,pk=pk)
     post.delete()
     return redirect('list')
+

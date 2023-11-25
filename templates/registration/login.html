@@ -18,7 +18,7 @@
     }
 
     .login-container {
-      position: relative; /* Added relative position to the login container */
+      position: relative;
       background-color: rgba(255, 255, 255, 0.8);
       max-width: 500px;
       width: 80%;
@@ -26,26 +26,26 @@
       border-radius: 5px;
       opacity: 0.9;
       box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
-      margin-top: 100px; /* Adjusted top margin to create a gap */
+      margin-top: 100px;
     }
 
     .login-container h1 {
-      position: absolute; /* Added absolute position to the app name */
-      top: -60px; /* Adjusted top positioning */
-      left: 50%; /* Centered horizontally */
-      transform: translateX(-50%); /* Centered horizontally */
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
       margin: 0;
-      color: #007bff; /* Set "Womens" color to blue */
+      color: #007bff;
       font-weight: bold;
-      font-size: 48px; /* Increased font size */
+      font-size: 48px;
       text-align: center;
       width: 100%;
-      text-transform: uppercase; /* Uppercase text */
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Added text shadow */
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .login-container h1 span {
-      color: #fff; /* Set "World" color to white */
+      color: #fff;
     }
 
     .login-container form .form-group {
@@ -97,28 +97,64 @@
       text-decoration: underline;
     }
 
-    .description {
-      text-align: center;
-      color: #777;
-      margin-top: 20px;
+    /* Styling for form validation errors */
+    .form-error {
+      color: #dc3545; /* Red color for error messages */
       font-size: 14px;
     }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <h1><span style="color: #007bff">Womens</span><span style="color: #fff">World</span></h1> <!-- Added span for "World" with white color -->
+    <h1><span style="color: #007bff">Womens</span><span style="color: #fff">World</span></h1>
+    
+<!-- Display Django messages with a modern error message look and close button -->
+{% if messages %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+    
     <form method="POST" action="{% url 'login' %}">
       {% csrf_token %}
       <div class="form-group">
         <label for="id_username">Username</label>
         <input type="text" name="username" class="form-control rounded-pill" id="id_username" placeholder="Enter your username">
+        <!-- Display username validation errors -->
+        {% if form.username.errors %}
+          <div class="form-error">
+            {% for error in form.username.errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
       <div class="form-group">
         <label for="id_password">Password</label>
         <input type="password" name="password" class="form-control" id="id_password" placeholder="Enter your password">
+        <!-- Display password validation errors -->
+        {% if form.password.errors %}
+          <div class="form-error">
+            {% for error in form.password.errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
       <button type="submit" class="btn btn-primary">Login</button>
+      <!-- Display non-field errors (e.g., authentication error) -->
+      {% if form.non_field_errors %}
+        <div class="form-error">
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+      {% endif %}
     </form>
     <hr>
     <div class="text-center">

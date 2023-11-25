@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Article List{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Latest Articles</h1>
+
+    <!-- Article Slider -->
+    <div id="articleSlider" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for article in page|slice:":6" %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="{{ article.image.url }}" alt="{{ article.title }}" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="article-details">
+                            <h2>{{ article.title }}</h2>
+                            <p class="text-muted">Published on {{ article.published_date|date:"F d, Y" }} by {{ article.author }}</p>
+                            <div class="article-body">{{ article.body|safe }}</div>
+                            <a href="{% url 'article:detail' pk=article.pk %}" class="btn btn-primary mt-3">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <a class="carousel-control-prev" href="#articleSlider" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#articleSlider" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </a>
+    </div>
+
+    <!-- List of All Articles -->
+    <div class="row">
+        {% for article in page %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <img src="{{ article.image.url }}" alt="{{ article.title }}" class="card-img-top">
+                <div class="card-body">
+                    <h2 class="card-title">{{ article.title }}</h2>
+                    <p class="card-text text-muted">Published on {{ article.published_date|date:"F d, Y" }} by {{ article.author }}</p>
+                    <div class="article-body">{{ article.body|safe }}</div>
+                    <a href="{% url 'article:detail' pk=article.pk %}" class="btn btn-primary mt-3">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Links -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page.has_previous %}
+                <a href="?page=1" class="btn btn-sm btn-primary">&laquo; first</a>
+                <a href="?page={{ page.previous_page_number }}" class="btn btn-sm btn-primary">previous</a>
+            {% endif %}
+            
+            <span class="current-page">
+                Page {{ page.number }} of {{ page.paginator.num_pages }}.
+            </span>
+            
+            {% if page.has_next %}
+                <a href="?page={{ page.next_page_number }}" class="btn btn-sm btn-primary">next</a>
+                <a href="?page={{ page.paginator.num_pages }}" class="btn btn-sm btn-primary">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block extra_css %}
+<style>
+    .carousel-inner {
+        border-radius: 10px;
+    }
+
+    .carousel-item {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .article-details h2 {
+        font-size: 2rem;
+    }
+
+    .article-details .text-muted {
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+
+    .article-details .article-body {
+        margin-top: 20px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        background: transparent;
+        border: none;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        font-size: 2rem;
+        color: #000;
+    }
+
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+        background: rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}

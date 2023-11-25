@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<div class="container job-grid-content">
+  <div class="search-bar-container">
+    <form class="search-bar" action="{% url 'search_files' %}" method="get">
+      <input type="text" name="q" class="search-input" placeholder="Search...">
+      <button type="submit" class="search-btn">Search</button>
+    </form>
+</div>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h3 class="ml-3">All Files</h3>
         
         <div class="row">
           {% for file in files %}
@@ -17,9 +23,9 @@
                     {% elif file.get_file_type == 'video' %}
                     <video src="{{file.adminupload.url }}" class="file-icon img-fluid" alt="{{file.title}}">
                     {% elif file.get_file_type == 'audio' %}
-                      <img src="{% static 'images/sound_icon.jpg' %}"  alt="{{file.title}}"  >
+                    <img style="height:90px;" src="{% static 'images/sound_icon.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
                     {% elif file.get_file_type == 'pdf' %}
-                      <img src="{% static 'images/pdf_icon.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
+                      <img src="{% static 'images/pdf_iconn.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
                     {% else %}
                       <img src="{% static 'file_icon.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
                     {% endif %}
@@ -33,9 +39,44 @@
                 </div>
               </div>
             </div>
+            {% empty %}
+      <div class="col-md-12">
+        <div class="job-item text-center"> <!-- Center the content -->
+          <p class="job-description" style="font-size: 20px;">Sorry, No files found</b>.</p> <!-- Increase the font size -->
+        </div>
+      </div>
           {% endfor %}
         </div>
       </div>
+    </div>
+  </div>
+  <div class="container" style="margin-bottom: 20px;">
+    <div class="pagination-container">
+      <ul class="pagination">
+        {% if files.has_previous %}
+          <li class="pagination-item">
+            <a href="?page=1" class="pagination-prev">&laquo; First</a>
+          </li>
+          <li class="pagination-item">
+            <a href="?page={{ page.previous_page_number }}" class="pagination-prev">Previous</a>
+          </li>
+        {% endif %}
+  
+        {% for num in files.paginator.page_range %}
+          <li class="pagination-item {% if num == files.number %}active{% endif %}">
+            <a href="?page={{ num }}">{{ num }}</a>
+          </li>
+        {% endfor %}
+  
+        {% if files.has_next %}
+          <li class="pagination-item">
+            <a href="?page={{ files.next_page_number }}" class="pagination-next">Next</a>
+          </li>
+          <li class="pagination-item">
+            <a href="?page={{ files.paginator.num_pages }}" class="pagination-next">&raquo; Last</a>
+          </li>
+        {% endif %}
+      </ul>
     </div>
   </div>
 
@@ -43,6 +84,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
+    img {
+      max-width: 100px; /* Set a smaller max-width */
+      max-height: 100px; /* Set a smaller max-height */
+    }
     .file-icon-container {
       display: flex;
       justify-content: center;
@@ -72,5 +117,73 @@
       margin-bottom: 5px;
       font-size: 20px;
     }
+
+    .search-bar-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+      margin-bottom: 40px;
+    }
+  
+    .search-bar {
+      display: flex;
+      align-items: center;
+    }
+  
+    .search-input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+  
+    .search-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    .search-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+  
+    .pagination {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  
+    .pagination-item {
+      margin-right: 5px;
+    }
+  
+    .pagination-prev,
+    .pagination-next {
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #333;
+    }
+  
+    .pagination-item.active {
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+    }
+
   </style>
 {% endblock %}

@@ -14,15 +14,43 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            position: relative; /* Add this line for positioning */
+        }
+
+        .exit-button {
+            position: absolute;
+            left: 5%; /* Place on the left */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Center vertically */
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .exit-button:hover {
+            background-color: #0056b3; /* Hover color */
+        }
+
+        .exit-icon {
+            margin-right: 5px; /* Space between icon and text */
         }
 
         .chat-container {
-            max-width:500px;
-            height:500px;
+            max-width: 1000px;
+            width: 700px;
+            height: 80vh;
             border: 1px solid #ccc;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .chat-header {
@@ -35,36 +63,34 @@
 
         .chat-messages {
             padding: 20px;
-            overflow-y: scroll;
-            max-height: 300px;
+            overflow-y: auto;
+            flex-grow: 1;
         }
 
         .message {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
             margin: 10px 0;
         }
 
         .user-message {
-            text-align: right;
-        }
-
-        .assistant-message {
-            text-align: left;
+            justify-content: flex-end;
         }
 
         .message-content {
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 8px;
             word-wrap: break-word;
+            max-width: 70%;
+            background-color: #f0f0f0;
+            color: #333;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
         .user-content {
             background-color: #007bff;
             color: #fff;
-        }
-
-        .assistant-content {
-            background-color: #f0f0f0;
-            color: #333;
         }
 
         .input-container {
@@ -73,14 +99,17 @@
             align-items: center;
             padding: 10px;
             background-color: #fff;
+            border-top: 1px solid #ccc;
         }
 
         input[type="text"] {
             flex-grow: 1;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: none;
             border-radius: 5px;
             margin-right: 10px;
+            outline: none;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
 
         button {
@@ -93,34 +122,24 @@
         }
 
         /* Add this CSS to make the delete button red and center it */
-        form:last-child {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #fff;
-            margin-top: 10px;
-}
-
-form:last-child button {
-    background-color: #ff0000; /* Red color for delete button */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-
-    
-}
-
+        .clear-button {
+            background-color: #ff0000; /* Red color for delete button */
+            color: #fff;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <a href="{% url 'home' %}" class="exit-button">
+        <span class="exit-icon">&#x2716;</span>Exit Chat
+    </a>
+
     <div class="chat-container">
-        <div class="chat-header">Chat with Assistant</div>
+        <div class="chat-header">{{user}}, Chat with our Expert.</div>
         <div class="chat-messages">
             {% for message in messages %}
-                <div class="message {% if message.role == 'user' %}user-message{% else %}assistant-message{% endif %}">
-                    <div class="message-content {% if message.role == 'user' %}user-content{% else %}assistant-content{% endif %}">
+                <div class="message {% if message.role == 'user' %}user-message{% endif %}">
+                    <div class="message-content {% if message.role == 'user' %}user-content{% endif %}">
                         {{ message.content }}
                     </div>
                 </div>
@@ -128,50 +147,63 @@ form:last-child button {
         </div>
         <form method="POST" action="{% url 'chat' %}">
             {% csrf_token %}
-            {{ chat_form.user_input }}
-            <button type="submit">Send</button>
+            <div class="input-container">
+                {{ chat_form.user_input }}
+                <button type="submit">Send</button>
+            </div>
         </form>
         <form method="POST" action="{% url 'clear-messages' %}">
             {% csrf_token %}
-            <button type="submit">Delete</button>
+            <div class="input-container">
+                <button type="submit" class="clear-button">Clear Chat</button>
+            </div>
         </form>
     </div>
-    
+
     <script>
         // JavaScript logic for handling user input and sending it to the server
         document.addEventListener("DOMContentLoaded", function() {
-            const userInput = document.getElementById("user-input");
-            const sendButton = document.getElementById("send-button");
+            const userInput = document.getElementById("id_user_input");
+            const sendButton = document.querySelector(".chat-container form:first-child button");
+            const clearButton = document.querySelector(".chat-container form:last-child button");
             const chatMessages = document.querySelector(".chat-messages");
     
             sendButton.addEventListener("click", function() {
                 const userMessage = userInput.value;
-                userInput.value = ""; // Clear the input field
+                if (userMessage.trim() !== "") {
+                    // Only send non-empty messages
     
-                // Create a new user message element and append it to the chat container
-                const userMessageElement = document.createElement("div");
-                userMessageElement.classList.add("message", "user-message");
-                const userMessageContent = document.createElement("div");
-                userMessageContent.classList.add("message-content", "user-content");
-                userMessageContent.textContent = userMessage;
-                userMessageElement.appendChild(userMessageContent);
+                    // Create a new user message element and append it to the chat container
+                    const userMessageElement = document.createElement("div");
+                    userMessageElement.classList.add("message", "user-message");
+                    const userMessageContent = document.createElement("div");
+                    userMessageContent.classList.add("message-content", "user-content");
+                    userMessageContent.textContent = userMessage;
+                    userMessageElement.appendChild(userMessageContent);
     
-                chatMessages.appendChild(userMessageElement);
+                    chatMessages.appendChild(userMessageElement);
     
-                // Scroll the chat messages container to the bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                    // Scroll the chat messages container to the bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
     
-                // Send the user message to the server using AJAX or fetch
-                // You need to implement this part to interact with your Django view
+                    // Clear the input field after sending the message
+                    userInput.value = '';
+    
+                    // Send the user message to the server using AJAX or fetch
+                    // You need to implement this part to interact with your Django view
+                }
             });
     
             // Automatically scroll to the bottom of the chat messages container when typing
             userInput.addEventListener("input", function() {
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             });
+    
+            // Clear chat button functionality
+            clearButton.addEventListener("click", function() {
+                chatMessages.innerHTML = ''; // Clear chat messages
+            });
         });
     </script>
-    
-    
 </body>
 </html>

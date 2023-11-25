@@ -1,22 +1,34 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {% block content %}
-  <div class="container">
-    <form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-      <div class="form-group">
-        <label for="id_title"><h2>Title:</h2></label>
-        <input type="text" class="form-control" name="title" maxlength="50" required id="id_title">
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="text-center">Upload Content</h2>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'upload' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="id_title">Title:</label>
+              <input type="text" class="form-control" name="title" maxlength="50" required id="id_title">
+            </div>
+            <div class="form-group">
+              <label for="id_description">Description:</label>
+              <textarea class="form-control" name="description" cols="40" rows="6" required id="id_description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="id_adminupload">Upload File:</label>
+              <input type="file" class="form-control-file" name="adminupload" required id="id_adminupload">
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="id_description"><h2>Description:</h2></label>
-        <textarea class="form-control" name="description" cols="40" rows="6" required id="id_description"></textarea>
-      </div>
-      <br>
-      <div class="form-group">
-        <label for="id_adminupload"><h2>Adminupload:</h2></label>
-        <input type="file" class="form-control-file" name="adminupload" required id="id_adminupload">
-      </div>
-      <button type="submit" class="btn btn-primary">Upload</button>
-    </form>
+    </div>
   </div>
+</div>
 {% endblock content %}

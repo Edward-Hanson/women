@@ -3,7 +3,7 @@
 <style>
   .body {
     display: grid;
-    grid-template-columns: repeat(3, 400px);
+    grid-template-columns: repeat(4, 250px); /* Adjusted card width and 4 per row */
     gap: 20px;
     padding: 20px;
     max-width: 90%;
@@ -17,8 +17,8 @@
     overflow: hidden;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    height: 400px;
-    width: 400px;
+    height: 250px; /* Adjusted card height */
+    width: 250px; /* Adjusted card width */
   }
 
   .card:hover {
@@ -48,7 +48,6 @@
   }
   
   .occupation{
-
     background:blue;
   }
   .occupation-overlay {
@@ -107,8 +106,9 @@
     color: #ff4d94;
   }
 
+
   .occupation-popup {
-    display: none;
+    color: teal;
   }
 
   .telephone {
@@ -168,33 +168,34 @@
     </form>
   </div>
 
-<div class="body">
-  {% for prof in profs %}
-  <a href="{% url 'detail_prof' prof.pk %}">
-    <div class="card">
-      <div class="profile-pic">
-        <img src="{{prof.profile_pic.url}}" alt="Profile Picture" />
-        <div class="occupation-overlay">
-          <div class="occupation">
-            <h1 style="position:absolute;font-weight:700; font-size:3.5vw; font-style:oblique; color:teal; bottom:45vh; left:14vh">
-              {{prof.occupation}}
-            </h1>
+  <div class="body">
+    {% for prof in profs %}
+    <a href="{% url 'detail_prof' prof.pk %}">
+      <div class="card">
+        <div class="profile-pic">
+          <img src="{{prof.profile_pic.url}}" alt="Profile Picture" />
+          <div class="occupation-overlay">
+            <div class="occupation">
+              <h1 style="position:absolute;font-weight:700; font-size:3.5vw; font-style:oblique; color:teal; bottom:45vh; left:14vh">
+                {{prof.occupation}}
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div class="details">
+          <div class="name">{{prof.name}}</div>
+          <div class="title">{{prof.title}}</div>
+          <div class="occupation-popup">{{prof.occupation}}</div>
+          <div class="institution">
+            {{prof.institution}}
+          </div>
+          <div class="telephone">
+            {{prof.telephone}}
           </div>
         </div>
       </div>
-      <div class="details">
-        <div class="name">{{prof.name}}</div>
-        <div class="title">{{prof.title}}</div>
-        <div class="occupation-popup">{{prof.occupation}}</div>
-        <div class="institution">
-          {{prof.institution}}
-        </div>
-        <div class="telephone">
-          {{prof.telephone}}
-        </div>
-      </div>
-    </div>
-  </a>
-  {% endfor %}
+    </a>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

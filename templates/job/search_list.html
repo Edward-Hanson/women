@@ -67,6 +67,12 @@
           </p>
         </div>
       </div>
+      {% empty %}
+      <div class="col-md-12">
+        <div class="job-item text-center"> <!-- Center the content -->
+          <p class="job-description" style="font-size: 20px;">Sorry, no search results for <b> "{{word}}"</b>.</p> <!-- Increase the font size -->
+        </div>
+      </div>
     {% endfor %}
   </div>
 </div>

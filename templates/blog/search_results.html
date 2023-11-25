@@ -1,41 +1,153 @@
 {% extends 'base.html' %}
 {% load static %}
-
-
-{% block title %}Search Results{% endblock title %}
-
 {% block content %}
-<div class="container">
-
-  <div class="row">
-    <div class="col-md-12">
-      <h3 class="ml-3">Search results for "{{query}}"</h3>
-      <br>
-      <div class="row">
-        {% for file in files %}
-          <div class="col-md-4">
-            <div class="card mb-4">
-              <div class="card-body">
-                <div class="file-icon-container">
-                  {% if file.get_file_type == 'image' %}
-                    <img src="{{file.adminupload.url}}" class="file-icon img-fluid" alt="{{file.title}}">
-                  {% elif file.get_file_type == 'video' %}
-                  <img src="{% static 'images/video_icon.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
-                  {% elif file.get_file_type == 'audio' %}
-                    <img src="{% static 'images/sound_icon.jpg' %}"  alt="{{file.title}}"  >
-                  {% elif file.get_file_type == 'pdf' %}
-                    <img src="{% static 'images/pdf_icon.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
-                  {% else %}
-                    <img src="{% static 'file_icon.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        
+        <div class="row">
+          {% for file in files %}
+            <div class="col-md-3"> <!-- Reduce width from col-md-4 to col-md-3 -->
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="file-icon-container">
+                    {% if file.get_file_type == 'image' %}
+                      <img src="{{file.adminupload.url}}" class="file-icon img-fluid" alt="{{file.title}}">
+                    {% elif file.get_file_type == 'video' %}
+                    <video src="{{file.adminupload.url }}" class="file-icon img-fluid" alt="{{file.title}}">
+                    {% elif file.get_file_type == 'audio' %}
+                    <img style="height:90px;" src="{% static 'images/sound_icon.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
+                    {% elif file.get_file_type == 'pdf' %}
+                      <img src="{% static 'images/pdf_iconn.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
+                    {% else %}
+                      <img src="{% static 'file_icon.jpg' %}" class="file-icon img-fluid" alt="{{file.title}}">
+                    {% endif %}
+                  </div>
+                  <h5 class="card-title text-center mt-3 mb-3"><a href="{% url 'detail' file.pk %}">{{ file.title }}</a></h5>
+                  {% if user.is_staff %}
+                  <div class="file-info">
+                    <span class="file-info-item">Downloads: {{ file.downloadcount }}</span>
+                  </div>
                   {% endif %}
                 </div>
-                <h5 class="card-title text-center mt-3 mb-3"><a href="{% url 'detail' file.pk %}">{{ file.title }}</a></h5>
               </div>
             </div>
-          </div>
-        {% endfor %}
+            {% empty %}
+      <div class="col-md-12">
+        <div class="job-item text-center"> <!-- Center the content -->
+          <p class="job-description" style="font-size: 20px;">Sorry, No files found</b>.</p> <!-- Increase the font size -->
+        </div>
+      </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
-</div>
-{% endblock content %}
+
+  <!-- Include the necessary CSS and font files for Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style>
+    img {
+      max-width: 100px; /* Set a smaller max-width */
+      max-height: 100px; /* Set a smaller max-height */
+    }
+    .file-icon-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+    }
+    .file-icon {
+      max-width: 80%; /* Reduce the max-width to fit within the column */
+      max-height: 200px;
+    }
+    .card-body {
+      padding-bottom: 1.25rem;
+      width:100%;
+    }
+    .file-info {
+      margin-top: 10px;
+    }
+    .file-info-item {
+      display: block;
+      font-size: 14px;
+    }
+    .ml-3 {
+      text-align: left;
+    }
+    .card-title {
+      margin-top: 0.5rem;
+      margin-bottom: 5px;
+      font-size: 20px;
+    }
+
+    .search-bar-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+      margin-bottom: 40px;
+    }
+  
+    .search-bar {
+      display: flex;
+      align-items: center;
+    }
+  
+    .search-input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+  
+    .search-btn {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    .search-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+  
+    .pagination {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  
+    .pagination-item {
+      margin-right: 5px;
+    }
+  
+    .pagination-prev,
+    .pagination-next {
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #333;
+    }
+  
+    .pagination-item.active {
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+    }
+
+  </style>
+{% endblock %}

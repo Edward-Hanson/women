@@ -24,7 +24,7 @@
             <div class="file-actions mt-4">
               <a href="{% url 'file_download' file.pk %}" class="btn btn-primary" download>Download</a>
               <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#shareModal">Share via Email</button>
-              <a class="btn btn-success mx-1" href="{{file.adminupload.url }}">Preview</a><br><br>
+              <a class="btn btn-success mx-1" href="{{file.adminupload.url }}" target="blank">Preview</a><br><br>
               {% if user.is_staff %}
               <a class="btn btn-success mx-1" href="{% url 'delete_post' pk=file.pk%}">Delete Post</a>
               {% endif %}

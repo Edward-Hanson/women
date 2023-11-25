@@ -77,10 +77,26 @@
             <div class="container">
                 {% if 'job/detail' in request.path or 'job/search_results' in request.path or 'job/create_jobs' in request.path or 'job/pending' in request.path %}
                 <a class="navbar-brand" href="{% url 'list_job' %}">Job Site</a>
-                {% elif 'prof/detail' in request.path or 'prof/create_prof' in request.path or 'prof/search' in request.path%}
+                {% elif 'prof/detail' in request.path or 'prof/create_prof' in request.path %}
                 <a class="navbar-brand" href="{% url 'list_profs' %}">Professional Cards</a>
+                {% elif 'blog/detail/' in request.path or 'blog/results' in request.path %}
+                <a class="navbar-brand" href="{% url 'list' %}">Documents</a>
+                {% elif 'article/edit' in request.path or 'article/detail' in request.path %}
+                <a class="navbar-brand" href="{% url 'article:list' %}">Articles</a>
                 {% else %}
                 <a class="navbar-brand" href="{% url 'home' %}">Women Empowering Site</a>
+                {% endif %}
+                {% if 'blog' in request.path and not 'detail' in request.path %}
+                <div class="dropdown ml-3"> <!-- Added ml-3 class for left margin -->
+                    <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                       Category
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'list_by_cat' 'video' %}">Video</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list_by_cat' 'audio' %}">Audio</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list_by_cat' 'pdf' %}">Pdf</a></li>
+                    </ul>
+                </div>
                 {% endif %}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,6 +110,11 @@
                                 <li class="nav-item">
                                     <a href="{% url 'create_job' %}" class="btn btn-primary job-btn create-job-btn">Create Job</a>
                                 </li>
+                            {% endif %}
+                            {% if 'blog' in request.path or 'article/detail' in request.path and 'blog/detail' in request.path %}
+                            <li class="nav-item">
+                                <a href="{% url 'article:list' %}" class="btn btn-primary job-btn create-job-btn"> ARTICLES</a>
+                            </li>
                             {% endif %}
                             {% if user.is_staff and 'blog' in request.path and 'upload' not in request.path%}
                                <li class="nav-item">
@@ -167,6 +188,5 @@
 
     <!-- Include any additional scripts or external libraries you may need -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
 </body>
 </html>
